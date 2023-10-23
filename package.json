@@ -1,5 +1,17 @@
 {
   "dependencies": {
-    "amqplib": "^0.10.3"
-  }
+    "amqplib": "^0.10.3",
+    "axios": "^1.5.1",
+    "npx": "^3.0.0",
+    "socket.io-client": "^4.7.2"
+  },
+  "name": "plugins",
+  "description": "",
+  "version": "1.0.0",
+  "main": "receive.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
 }
