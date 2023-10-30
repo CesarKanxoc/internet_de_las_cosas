@@ -11,7 +11,7 @@ smtp_server = 'smtp.gmail.com'
 smtp_port = 587
 
 # URL de la API para obtener el stock de productos
-api_url = 'http://192.168.1.74:8080/productos_stock'
+api_url = 'http://192.168.1.72:5000/productos_stock'
 
 def obtener_stock_de_productos():
     try:
@@ -58,7 +58,9 @@ def callback(ch, method, properties, body):
             print(f" [x] Mensaje: {mensaje}, Stock de productos actual: {productos_stock}")
     else:
         print(" [!] No se pudo obtener el stock de productos. Verifica la conexión a la API.")
-
+        
+#credencial = pika.PlainCredentials('cesar', 'cesar')
+#connection = pika.BlockingConnection(pika.ConnectionParameters(host='192.168.1.72',port='5672', credentials=credencial))
 connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
 channel = connection.channel()
 channel.queue_declare(queue='notificaciones', durable=True)

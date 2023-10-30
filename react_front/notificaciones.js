@@ -5,7 +5,7 @@ function Notifications() {
   const [message, setMessage] = useState('');
 
   useEffect(() => {
-    const socket = socketIOClient('http://192.168.1.74:8080');  // Cambia la URL según tu configuración
+    const socket = socketIOClient('http://127.0.0.1:5000/productos_stock');  // Cambia la URL según tu configuración
 
     socket.on('message', (data) => {
       setMessage(data);

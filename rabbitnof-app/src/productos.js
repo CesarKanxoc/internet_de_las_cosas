@@ -1,36 +1,35 @@
 import React, { useEffect, useState } from 'react';
-import socketIOClient from 'socket.io-client';
 import axios from 'axios';
 
 function ProductStock() {
   const [stock, setStock] = useState(0);
 
   useEffect(() => {
-    const socket = socketIOClient('http://192.168.1.74:8080/productos_stock');
-
-    socket.on('connect', () => {
-      console.log('Conectado al servidor de actualizaciones');
-    });
-
-    socket.on('stock_updated', (newStock) => {
-      setStock(newStock);
-    });
-
-    return () => {
-      socket.disconnect();
-    };
+    // Realiza una solicitud HTTP para obtener el stock inicial
+    axios.get('http://192.168.1.72:5000/productos_stock')
+      .then((response) => {
+        setStock(response.data.producto_stock);
+      })
+      .catch((error) => {
+        console.error('Error al obtener el stock: ' + error);
+      });
   }, []);
 
-  // Función para actualizar el stock (simulación)
+  // Función para actualizar el stock
   const actualizarStock = () => {
-    axios.post('http://192.168.1.74:8080/actualizar_stock')
+    axios.post('http://192.168.1.72:5000/actualizar_stock')
       .then((response) => {
         if (response.data.success) {
+          setStock(response.data.nuevo_stock);
           console.log('Stock actualizado exitosamente.');
+        } else {
+          console.error('Error al actualizar el stock: No se pudo obtener la notificación.');
+          // Aquí puedes mostrar un mensaje de error al usuario.
         }
       })
       .catch((error) => {
         console.error('Error al actualizar el stock: ' + error);
+        // Aquí puedes mostrar un mensaje de error al usuario.
       });
   };
 
