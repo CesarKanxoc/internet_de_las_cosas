@@ -2,6 +2,7 @@ from flask import Flask, jsonify, make_response
 from flask_socketio import SocketIO
 import pika
 from flask_cors import CORS, cross_origin
+import json
 stock_actual = 100
 
 def create_app():
@@ -34,8 +35,9 @@ def obtener_productos():
     if stock_actual is not None:
         if stock_actual <= 20:
             # Publica un mensaje en la cola si el stock es igual o menor a 20
-            mensaje = f"Alerta: Stock de productos es bajo ({stock_actual})"
-            rabbit_channel.basic_publish(exchange='', routing_key='notificaciones', body=mensaje)
+            mensaje = {'mensaje': f"Alerta: Stock de productos es bajo ({stock_actual})"}
+            rabbit_channel.basic_publish(exchange='', routing_key='notificaciones', body=json.dumps(mensaje))
+            socketio.emit('message',mensaje)
         response = jsonify({'producto_stock': stock_actual})
         return make_response(response)
     else:
@@ -59,7 +61,10 @@ def obtener_stock_de_productos():
     except Exception as e:
         print(f"Error al obtener el stock: {str(e)}")
         return None  # Maneja el error de la forma que consideres apropiada
-
+    
+@socketio.on('message')
+def handle_message(message):
+    print(f'Mensaje de Socket.IO: {message}')
 
 @app.route('/actualizar_stock', methods=['POST'])
 @cross_origin(origin="http://localhost:3000")

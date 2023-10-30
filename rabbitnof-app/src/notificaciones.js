@@ -5,11 +5,10 @@ function Notifications() {
   const [stock, setStock] = useState({ mensaje: '', valor: 0 });
 
   useEffect(() => {
-    const socket = socketIOClient('http://192.168.1.72:5000/productos_stock');  // Cambia la URL según tu configuración
+    const socket = socketIOClient('http://192.168.1.72:5000');  // Cambia la URL según tu configuración
 
     socket.on('message', (data) => {
-      const { mensaje, valor } = JSON.parse(data);
-      setStock({ mensaje, valor });
+      setStock(data);
     });
 
     return () => {
