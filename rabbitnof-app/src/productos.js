@@ -6,7 +6,7 @@ function ProductStock() {
 
   useEffect(() => {
     // Realiza una solicitud HTTP para obtener el stock inicial
-    axios.get('http://192.168.1.72:5000/productos_stock')
+    axios.get('http://192.168.213.87:5000/productos_stock')
       .then((response) => {
         setStock(response.data.producto_stock);
       })
@@ -17,19 +17,19 @@ function ProductStock() {
 
   // Función para actualizar el stock
   const actualizarStock = () => {
-    axios.post('http://192.168.1.72:5000/actualizar_stock')
+    axios.post('http://192.168.213.87:5000/actualizar_stock')
       .then((response) => {
         if (response.data.success) {
           setStock(response.data.nuevo_stock);
           console.log('Stock actualizado exitosamente.');
         } else {
           console.error('Error al actualizar el stock: No se pudo obtener la notificación.');
-          // Aquí puedes mostrar un mensaje de error al usuario.
+
         }
       })
       .catch((error) => {
         console.error('Error al actualizar el stock: ' + error);
-        // Aquí puedes mostrar un mensaje de error al usuario.
+        
       });
   };
 

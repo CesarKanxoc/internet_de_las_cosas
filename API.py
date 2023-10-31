@@ -29,9 +29,8 @@ rabbit_channel.queue_declare(queue='notificaciones', durable=True)
 
 @app.route('/productos_stock', methods=['GET'])
 @cross_origin(origin="http://localhost:3000")
-def obtener_productos():
-    # Realiza tu lógica para obtener el stock de productos
-    stock_actual = obtener_stock_de_productos() # Asegúrate de implementar esta función
+def obtenerProductos():
+    stock_actual = obtenerStockdeProductos() 
     if stock_actual is not None:
         if stock_actual <= 20:
             # Publica un mensaje en la cola si el stock es igual o menor a 20
@@ -43,7 +42,7 @@ def obtener_productos():
     else:
         return 'No se pudo obtener el stock de productos', 500
 
-def obtener_stock_de_productos():
+def obtenerStockdeProductos():
     global stock_actual
     try:
         connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
@@ -60,7 +59,7 @@ def obtener_stock_de_productos():
         return stock_actual
     except Exception as e:
         print(f"Error al obtener el stock: {str(e)}")
-        return None  # Maneja el error de la forma que consideres apropiada
+        return None 
     
 @socketio.on('message')
 def handle_message(message):
@@ -69,9 +68,8 @@ def handle_message(message):
 @app.route('/actualizar_stock', methods=['POST'])
 @cross_origin(origin="http://localhost:3000")
 def actualizar_stock():
-    # Lógica para actualizar el stock
-    nuevo_stock = obtener_stock_de_productos()
-    notificacion = obtener_productos()
+    nuevo_stock = obtenerStockdeProductos()
+    notificacion = obtenerProductos()
     if notificacion:
         notificacion = notificacion.json  # Convierte el objeto Response a un diccionario
     #print(notificacion)
@@ -79,4 +77,4 @@ def actualizar_stock():
     
 
 if __name__ == '__main__':
-    socketio.run(app,host='192.168.1.72', port=5000,  allow_unsafe_werkzeug=True)
+    socketio.run(app,host='192.168.213.87', port=5000,  allow_unsafe_werkzeug=True)

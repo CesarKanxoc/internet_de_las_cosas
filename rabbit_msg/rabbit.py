@@ -5,15 +5,15 @@ from email.mime.multipart import MIMEMultipart
 import requests
 
 # Configura la conexión SMTP para el correo electrónico
-email_address = 'whitehokst@gmail.com'  # Cambia esto a tu dirección de correo
-password = 'pzjw txjm lvdg ivwj'  # Cambia esto a tu contraseña de correo
+email_address = 'whitehokst@gmail.com'
+password = 'pzjw txjm lvdg ivwj'  
 smtp_server = 'smtp.gmail.com'
 smtp_port = 587
 
 # URL de la API para obtener el stock de productos
-api_url = 'http://192.168.1.72:5000/productos_stock'
+api_url = 'http://192.168.213.87:5000/productos_stock'
 
-def obtener_stock_de_productos():
+def obtenerStockdeProductos():
     try:
         response = requests.get(api_url)
         if response.status_code == 200:
@@ -25,7 +25,7 @@ def obtener_stock_de_productos():
         print(f" [!] Error al obtener el stock: {str(e)}")
     return None
 
-def enviar_correo(destinatario, asunto, mensaje):
+def enviarCorreo(destinatario, asunto, mensaje):
     msg = MIMEMultipart()
     msg['From'] = email_address
     msg['To'] = destinatario
@@ -48,13 +48,12 @@ def enviar_correo(destinatario, asunto, mensaje):
 
 def callback(ch, method, properties, body):
     mensaje = body.decode('utf-8')
-    productos_stock = obtener_stock_de_productos()
+    productos_stock = obtenerStockdeProductos()
     if productos_stock is not None:
         if productos_stock <= 20:
-            # Cambia esto a la dirección de correo del destinatario
             destinatario = '200300581@ucaribe.edu.mx'
             asunto = "Alerta: Stock de productos se agota"
-            enviar_correo(destinatario, asunto, mensaje)
+            enviarCorreo(destinatario, asunto, mensaje)
             print(f" [x] Mensaje: {mensaje}, Stock de productos actual: {productos_stock}")
     else:
         print(" [!] No se pudo obtener el stock de productos. Verifica la conexión a la API.")
